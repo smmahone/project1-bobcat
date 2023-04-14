@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+//source https://stackoverflow.com/questions/3866217/how-can-i-make-the-system-call-write-print-to-the-screen
 int main(int argc, char *argv[]) {
   int fptr;
   int readPtr;
@@ -18,7 +19,8 @@ int main(int argc, char *argv[]) {
     } else {
         readPtr = read(fptr, total, 4096);
         while (readPtr != 0) {
-          write(readPtr, total, sizeof(total));
+          write(1, total, readPtr);
+          write(1, "\n", 2);
           readPtr = read(fptr, total, 4096);
         }
       }
