@@ -6,22 +6,25 @@
 #include <string.h>
 #include <unistd.h>
 int main(int argc, char *argv[]) {
-  FILE *fptr;
+  int fptr;
+  int readPtr;
   char total[4096];
   int success_check = 0;
   for (int x = 1; x < argc; x++) {
-    fptr = fopen(argv[x], "r");
-    if (fptr == NULL) {
-      fprintf(stderr, "bobcat: %s: No such file or directory\n", argv[x]);
+    fptr = open(argv[x], 2);
+    if (fptr == -1) {
+      warn("%s", argv[x]);
       success_check++;
     } else {
-        while (fgets(total, 4096, fptr) != NULL) {
-          printf("%s", total);
+        readPtr = read(fptr, total, 4096);
+        while (readPtr != 0) {
+          write(readPtr, total, sizeof(total));
+          readPtr = read(fptr, total, 4096);
         }
       }
   }
-  if (fptr != NULL) {
-    fclose(fptr);
+  if (fptr != -1) {
+    close(fptr);
   }
   if (success_check != 0) {
     return success_check;
